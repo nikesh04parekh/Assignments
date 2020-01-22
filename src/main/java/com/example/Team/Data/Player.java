@@ -1,94 +1,94 @@
 package com.example.Team.Data;
 
 public class Player {
-    protected String name;
-    protected Double strikeRate;
-    protected Integer numberOfMatchPlayed;
-    protected Double economy;
-    protected Integer numberOfSixes;
-    protected Integer numberOfFours;
-    protected Integer numberOfNotOut;
-    protected Integer numberOfWickets;
-    protected Integer numberOfCatches;
-    protected Integer numberOfRuns;
+     String name;
+     Double strikeRate;
+     Integer numberOfMatchPlayed;
+     Double economy;
+     Integer numberOfSixes;
+     Integer numberOfFours;
+     Integer numberOfNotOut;
+     Integer numberOfWickets;
+     Integer numberOfCatches;
+     Integer numberOfRuns;
 
-    protected Integer getNumberOfRuns() {
+     Integer getNumberOfRuns() {
         return numberOfRuns;
     }
 
-    protected void setNumberOfRuns(Integer numberOfRuns) {
+     void setNumberOfRuns(Integer numberOfRuns) {
         this.numberOfRuns = numberOfRuns;
     }
 
-    protected String getName() {
+     String getName() {
         return name;
     }
 
-    protected Integer getNumberOfWickets() {
+     Integer getNumberOfWickets() {
         return numberOfWickets;
     }
 
-    protected void setNumberOfWickets(Integer numberOfWickets) {
+     void setNumberOfWickets(Integer numberOfWickets) {
         this.numberOfWickets = numberOfWickets;
     }
 
-    protected void setName(String name) {
+     void setName(String name) {
         this.name = name;
     }
 
-    protected Double getStrikeRate() {
+     Double getStrikeRate() {
         return strikeRate;
     }
 
-    protected void setStrikeRate(Double strikeRate) {
+     void setStrikeRate(Double strikeRate) {
         this.strikeRate = strikeRate;
     }
 
-    protected Integer getNumberOfMatchPlayed() {
+     Integer getNumberOfMatchPlayed() {
         return numberOfMatchPlayed;
     }
 
-    protected void setNumberOfMatchPlayed(Integer numberOfMatchPlayed) {
+     void setNumberOfMatchPlayed(Integer numberOfMatchPlayed) {
         this.numberOfMatchPlayed = numberOfMatchPlayed;
     }
 
-    protected Double getEconomy() {
+     Double getEconomy() {
         return economy;
     }
 
-    protected void setEconomy(Double economy) {
+     void setEconomy(Double economy) {
         this.economy = economy;
     }
 
-    protected Integer getNumberOfSixes() {
+     Integer getNumberOfSixes() {
         return numberOfSixes;
     }
 
-    protected void setNumberOfSixes(Integer numberOfSixes) {
+     void setNumberOfSixes(Integer numberOfSixes) {
         this.numberOfSixes = numberOfSixes;
     }
 
-    protected Integer getNumberOfFours() {
+     Integer getNumberOfFours() {
         return numberOfFours;
     }
 
-    protected void setNumberOfFours(Integer numberOfFours) {
+     void setNumberOfFours(Integer numberOfFours) {
         this.numberOfFours = numberOfFours;
     }
 
-    protected Integer getNumberOfNotOut() {
+     Integer getNumberOfNotOut() {
         return numberOfNotOut;
     }
 
-    protected void setNumberOfNotOut(Integer numberOfNotOut) {
+     void setNumberOfNotOut(Integer numberOfNotOut) {
         this.numberOfNotOut = numberOfNotOut;
     }
 
-    protected Integer getNumberOfCatches() {
+     Integer getNumberOfCatches() {
         return numberOfCatches;
     }
 
-    protected void setNumberOfCatches(Integer numberOfCatches) {
+     void setNumberOfCatches(Integer numberOfCatches) {
         this.numberOfCatches = numberOfCatches;
     }
 
