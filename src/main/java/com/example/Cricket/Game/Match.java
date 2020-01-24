@@ -7,6 +7,23 @@ public class Match {
     private Integer numberOfOvers;
     private String verdict;
     private String team1Score;
+    private String tossData;
+
+    public void setTeam1(Team team1) {
+        this.team1 = team1;
+    }
+
+    public void setTeam2(Team team2) {
+        this.team2 = team2;
+    }
+
+    public String getTossData() {
+        return tossData;
+    }
+
+    public void setTossData(String tossData) {
+        this.tossData = tossData;
+    }
 
     public String getVerdict() {
         return verdict;
@@ -37,7 +54,7 @@ public class Match {
     public void setTeam1(String value)
     {
         team1 = new Team();
-        team1.generateTeam(value , 4 , 5 , 2);
+        team1.generateTeam(value , 4 , 4 , 2 , 1);
     }
 
     public Match(String team1, String team2, Integer numberOfOvers) {
@@ -46,8 +63,8 @@ public class Match {
         this.team2 = new Team();
         this.team2.name = team2;
         this.numberOfOvers = numberOfOvers;
-        this.team1.generateTeam(team1 , 4 , 5 , 2);
-        this.team2.generateTeam(team2 , 4 , 5 , 2);
+        this.team1.generateTeam(team1 , 4 , 4 , 2 , 1);
+        this.team2.generateTeam(team2 , 4 , 4 , 2 , 1);
 
     }
 
@@ -58,7 +75,7 @@ public class Match {
     public void setTeam2Name(String value)
     {
         team2 = new Team();
-        team2.generateTeam(value , 4 , 5 , 2);
+        team2.generateTeam(value , 4 , 4 , 2 , 1);
     }
 
     public Team getTeam2()

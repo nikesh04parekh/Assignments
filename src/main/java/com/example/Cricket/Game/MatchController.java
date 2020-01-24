@@ -11,13 +11,9 @@ public class MatchController {
 
     @RequestMapping("/{team1}&{team2}&{numberOfOvers}")
     public Match executeMatch(@PathVariable String team1 , @PathVariable String team2 , @PathVariable Integer numberOfOvers){
-        if (matchService.getTossResult() == 1)
-        {
-            String swapHelper = team1;
-            team1 = team2;
-            team2 = swapHelper;
-        }
+
         matchService.setMatch(team1 , team2 , numberOfOvers);
+        matchService.setTossData();
         return matchService.generateWinner();
     }
 }

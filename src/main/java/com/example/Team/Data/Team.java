@@ -1,23 +1,31 @@
 package com.example.Team.Data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 
 public class Team {
     public String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public Team.teamPlayer [] playersList;
     private static DecimalFormat df = new DecimalFormat("0.00");
+    @JsonIgnoreProperties({"wasLastBowling" , "wasLastBatting"})
     public class teamPlayer extends com.example.Team.Data.Player {
         public String type;
         public Integer numberOfBallsPlayed;
         public Integer numberOfBallsBowled;
         public Integer numberOfMaidenOvers;
         public Integer numberOfRunsConceded;
-        @JsonIgnore
         public Boolean wasLastBatting;
-        @JsonIgnore
         public Boolean wasLastBowling;
 
         public teamPlayer(){
@@ -58,15 +66,18 @@ public class Team {
         }
     }
 
-    public void generateTeam(String name , Integer batsman , Integer bowler , Integer allRounder){
+    public void generateTeam(String name , Integer batsman , Integer bowler , Integer allRounder , Integer wicketKeeper){
         this.name = name;
         this.playersList = new Team.teamPlayer[11];
         for (int i = 0 ; i < 11 ; i++) {
             if (i < batsman) {
                 this.playersList[i] = new Team().new teamPlayer("batsman", 0, 0 , 0 , 0);
-            } else if (i > batsman && i < batsman + allRounder) {
+            } else if (i > batsman && i < batsman + wicketKeeper) {
+                this.playersList[i] = new Team().new teamPlayer("wicketKeeper", 0, 0 , 0 , 0);
+            } else if (i > batsman + wicketKeeper && i < batsman + wicketKeeper + allRounder){
                 this.playersList[i] = new Team().new teamPlayer("allRounder", 0, 0 , 0 , 0);
-            } else {
+            }
+            else {
                 this.playersList[i] = new Team().new teamPlayer("bowler", 0, 0 , 0 , 0);
             }
             playersList[i].setName("Player" + i);
@@ -134,5 +145,23 @@ public class Team {
         playersList[index].setEconomy(Double.parseDouble(df.format(economy)));
         result.append(" ").append(playersList[index].getEconomy());
         return result.toString();
+    }
+
+    public void setStrikeRate(int index){
+        double strikeRate = 0.0;
+        if (playersList[index].numberOfBallsPlayed == 0);
+        else{
+            strikeRate = (100.0 * playersList[index].numberOfRuns) / playersList[index].numberOfBallsPlayed;
+        }
+        playersList[index].setStrikeRate(Double.valueOf(df.format(strikeRate)));
+    }
+
+    public void setEconomy(int index){
+        double economy = 0.0;
+        if (playersList[index].numberOfBallsBowled == 0);
+        else{
+            economy = (6.0 * playersList[index].numberOfRunsConceded) / playersList[index].numberOfBallsBowled;
+        }
+        playersList[index].setEconomy(Double.valueOf(df.format(economy)));
     }
 }

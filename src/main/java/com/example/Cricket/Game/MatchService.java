@@ -8,10 +8,27 @@ import java.util.*;
 public class MatchService {
 
     private Match match;
-    protected Integer getTossResult()
-    {
+    protected void setTossData(){
         Random rand = new Random();
-        return rand.nextInt(2);
+        int tossData = rand.nextInt();
+        int winningTeamDecision = rand.nextInt();
+        StringBuilder result = new StringBuilder();
+        if (tossData == 0)
+            result.append(match.getTeam1().name);
+        else
+            result.append(match.getTeam2().name);
+        result.append(" won the toss and decided to ");
+        if (winningTeamDecision == 0){
+            result.append("bat");
+        }
+        else
+            result.append("bowl");
+        if (tossData + winningTeamDecision == 1){
+        String swapHelper = match.getTeam1().name;
+        match.getTeam1().setName(match.getTeam2().getName());
+        match.getTeam2().setName(swapHelper);
+        }
+        match.setTossData(result.toString());
     }
     protected void setMatch(String team1Name , String team2Name , Integer numberOfOvers)
     {
@@ -21,43 +38,40 @@ public class MatchService {
     {
         int ballsConsumed = (match.getNumberOfOvers() * 6) - a.second;
         StringBuilder result = new StringBuilder();
-        //result.append(a.toString());
         int overs = ballsConsumed / 6;
         int balls = ballsConsumed % 6;
-        //result.append(Integer.toString(a.second) + " " + Integer.toString((numberOfOvers * 6) - a.second) + "<br>");
         result.append(team).append(": ").append(Integer.toString(a.first.first)).append("/").append(Integer.toString(a.first.second)).append("( ").append(overs);
         if (balls != 0)
             result.append(".").append(Integer.toString(balls));
-        result.append(" overs )" + "<br>");
+        result.append(" overs )");
         return result.toString();
+    }
+    private void setStrikeRateAndEconomy(Team team){
+        for (int i = 0 ; i < 11 ; i++)
+        {
+            team.setStrikeRate(i);
+            team.setEconomy(i);
+        }
     }
     public Match generateWinner()
     {
         Pair < Pair < Integer , Integer > , Integer > scoreOfTeam1 = runInstance(0 , 0);
         Pair < Pair < Integer , Integer > , Integer > scoreOfTeam2 = runInstance(scoreOfTeam1.first.first + 1 , 1);
-        StringBuilder result = new StringBuilder();
-        result.append("<div style=\"text-align:center;margin-top:50px\">");
-        //result.append(scoreOfTeam1.toString() + "<br>");
         String team1Score = generateScore(match.getTeam1().name , scoreOfTeam1);
         match.setTeam1Score(team1Score);
-        result.append(team1Score);
-        //result.append(scoreOfTeam1.toString() + "<br>");
         String team2Score = generateScore(match.getTeam2().name , scoreOfTeam2);
         match.setTeam2Score(team2Score);
-        result.append(team2Score);
-        result.append("<b>");
+        setStrikeRateAndEconomy(match.getTeam1());
+        setStrikeRateAndEconomy(match.getTeam2());
         if (scoreOfTeam1.first.first > scoreOfTeam2.first.first)
         {
             StringBuilder verdict = new StringBuilder();
             String margin = Integer.toString(scoreOfTeam1.first.first - scoreOfTeam2.first.first);
-            result.append(match.getTeam1().name).append(" won by a margin of ").append(margin);
             verdict.append(match.getTeam1().name).append(" won by a margin of ").append(margin);
             if (scoreOfTeam1.first.first - scoreOfTeam2.first.first == 1) {
-                result.append(" run");
                 verdict.append(" run");
             }
             else {
-                result.append(" runs");
                 verdict.append(" runs");
             }
             match.setVerdict(verdict.toString());
@@ -66,8 +80,10 @@ public class MatchService {
         {
             String wicketsLeft = Integer.toString(10 - scoreOfTeam2.first.second);
             StringBuilder verdict = new StringBuilder();
-            result.append(match.getTeam2().name).append(" won by ").append(wicketsLeft).append(" wickets");
-            verdict.append(match.getTeam2().name).append(" won by ").append(wicketsLeft).append(" wickets");
+            verdict.append(match.getTeam2().name).append(" won by ").append(wicketsLeft).append(" wicket");
+            if (scoreOfTeam2.first.second < 9) {
+                verdict.append("s");
+            }
             int oversLeft = scoreOfTeam2.second / 6;
             int ballsLeft = scoreOfTeam2.second % 6;
             if (scoreOfTeam2.second == 0){
@@ -95,119 +111,21 @@ public class MatchService {
                 {
                     overs.append(Integer.toString(oversLeft)).append(".").append(Integer.toString(ballsLeft)).append(" overs left");
                 }
-                result.append(overs);
                 verdict.append(overs);
                 match.setVerdict(verdict.toString());
             }
         }
         else if (match.getNumberOfOvers() == 0) {
-            result.setLength(0);
             StringBuilder verdict = new StringBuilder();
-            result.append("Number of overs cannot be zero");
             verdict.append("Number of overs cannot be zero");
             match.setVerdict(verdict.toString());
         }
         else{
             StringBuilder verdict = new StringBuilder();
-            result.append("Match tied");
             verdict.append("Match tied");
             match.setVerdict(verdict.toString());
         }
-        result.append("<b>");
-        result.append("</div>");
-        result.append("<br><br><br>");
-        appendData(result , 0);
-        result.append("<br><br><br>");
-        appendData(result , 1);
         return match;
-    }
-    private void appendData(StringBuilder result , int flag){
-        result.append("<p style=\"text-align:center\">");
-        if (flag == 0){
-            result.append(match.getTeam1().name).append(" ").append("Batting").append("<br>");
-        }
-        else
-            result.append(match.getTeam2().name).append(" ").append("Batting").append("<br>");
-        result.append("</p>");
-        result.append("\n" +
-                "<table style=\"width:100%;text-align:center;padding:0px\" border = \"1\">\n" +
-                "  <tr>\n" +
-                "    <th style=\"padding:5px\">playerName</th>\n" +
-                "    <th>runsScored</th> \n" +
-                "    <th>ballsPlayed</th>\n" +
-                "    <th>numberOfFours</th>\n" +
-                "    <th>numberOfSixes</th>\n" +
-                "    <th>strikeRate</th>\n" +
-                "  </tr>\n");
-        if (flag == 0){
-            for (int i = 0 ; i < 11 ; i++){
-                String data = match.getTeam1().getBattingData(i);
-                if (data.length() == 0)
-                    continue;
-                result.append("  <tr>\n");
-                String [] temp = data.split(" ");
-                for (String bar : temp)
-                    result.append("<td>").append(bar).append("</td>\n");
-                result.append("  </tr>\n");
-            }
-            result.append("</table>");
-        }
-        else{
-            for (int i = 0 ; i < 11 ; i++){
-                String data = match.getTeam2().getBattingData(i);
-                if (data.length() == 0)
-                    continue;
-                result.append("<tr>\n");
-                String [] temp = data.split(" ");
-                for (String bar : temp)
-                    result.append("<td>").append(bar).append("</td>\n");
-                result.append("</tr>\n");
-            }
-            result.append("</table>");
-        }
-        result.append("<br><br><br>");
-        result.append("<p style=\"text-align:center\">");
-        if (flag == 0){
-            result.append(match.getTeam2().name).append(" ").append("Bowling").append("<br>");
-        }
-        else
-            result.append(match.getTeam1().name).append(" ").append("Bowling").append("<br>");
-        result.append("</p>");
-        result.append("\n" +
-                "<table style=\"width:100%;text-align:center;padding:0px\" border = \"1\">\n" +
-                "  <tr>\n" +
-                "    <th style=\"padding:5px\">playerName</th>\n" +
-                "    <th>numberOfOvers</th> \n" +
-                "    <th>runsConceded</th>\n" +
-                "    <th>wickets</th>\n" +
-                "    <th>economy</th>\n" +
-                "  </tr>\n");
-        if (flag == 1){
-            for (int i = 0 ; i < 11 ; i++){
-                String data = match.getTeam1().getBowlingData(i);
-                if (data.length() == 0)
-                    continue;
-                result.append("<tr>\n");
-                String [] temp = data.split(" ");
-                for (String bar : temp)
-                    result.append("<td>").append(bar).append("</td>\n");
-                result.append("</tr>\n");
-            }
-            result.append("</table>");
-        }
-        else{
-            for (int i = 0 ; i < 11 ; i++){
-                String data = match.getTeam2().getBowlingData(i);
-                if (data.length() == 0)
-                    continue;
-                result.append("<tr>\n");
-                String [] temp = data.split(" ");
-                for (String bar : temp)
-                    result.append("<td>").append(bar).append("</td>\n");
-                result.append("</tr>\n");
-            }
-            result.append("</table>");
-        }
     }
 
     private Pair< Pair< Integer , Integer > , Integer > runInstance(Integer target , Integer flag)
@@ -232,25 +150,24 @@ public class MatchService {
         {
             Boolean flagForRun = false;
             int currentBowlerIndex = 0;
-            while((currentBowlerIndex = randomForBowlerIndex.nextInt(11)) == bowlerIndex);
+            while((currentBowlerIndex = (randomForBowlerIndex.nextInt(6)) + 5) == bowlerIndex);
             bowlerIndex = currentBowlerIndex;
+            int runsInThisOver = 0;
             for (int j = 0 ; j < 6 ; j++)
             {
                 int value = randomForRuns.nextInt(8);
                 numberOfBalls--;
-                Boolean overLeft = false;
-                Boolean runScored = false;
-                if (flag == 0) {
+                if (flag == 0)
+                {
                     match.getTeam2().playersList[bowlerIndex].wasLastBowling = true;
                     match.getTeam1().playersList[strikerIndex].numberOfBallsPlayed++;
                     match.getTeam2().playersList[bowlerIndex].numberOfBallsBowled++;
-                    if (value == 7){
+                    if (value == 7)
+                    {
                         match.getTeam2().addWicket(bowlerIndex);
                         match.getTeam1().playersList[strikerIndex].wasLastBatting = false;
                         wickets = wickets + 1;
-                        if (wickets == 10) {
-                            if (j != 5)
-                                overLeft = true;
+                        if (wickets == 10){
                             break;
                         }
                         strikerIndex = Math.max(strikerIndex , nonStrikerIndex) + 1;
@@ -258,8 +175,8 @@ public class MatchService {
                     }
                     else if (value != 0)
                     {
-                        runScored = true;
                         runs += value;
+                        runsInThisOver += value;
                         match.getTeam2().addRunsConceded(bowlerIndex , value);
                         match.getTeam1().addRuns(strikerIndex , value);
                         if (value == 4)
@@ -283,48 +200,36 @@ public class MatchService {
                         match.getTeam2().playersList[strikerIndex].wasLastBatting = false;
                         wickets++;
                         if (wickets == 10) {
-                            if (j != 5)
-                                overLeft = true;
                             break;
                         }
                         strikerIndex = Math.max(strikerIndex , nonStrikerIndex) + 1;
                         match.getTeam2().playersList[strikerIndex].wasLastBatting = true;
                     }
-                    else if (value != 0){
-                        runScored = true;
+                    else if (value != 0) {
                         runs += value;
-                        match.getTeam1().addRunsConceded(bowlerIndex , value);
-                        match.getTeam2().addRuns(strikerIndex , value);
+                        runsInThisOver += value;
+                        match.getTeam1().addRunsConceded(bowlerIndex, value);
+                        match.getTeam2().addRuns(strikerIndex, value);
                         if (value == 4)
                             match.getTeam2().addFour(strikerIndex);
-                        else if (value == 6){
+                        else if (value == 6) {
                             match.getTeam2().addSix(strikerIndex);
-                        }
-                        else if (value % 2 == 1){
+                        } else if (value % 2 == 1) {
                             int swapHelper = strikerIndex;
                             strikerIndex = nonStrikerIndex;
                             nonStrikerIndex = swapHelper;
                         }
                     }
                     if (runs >= target) {
-                        if (j != 5) {
-                            overLeft = true;
-                            break;
-                        }
+                        break;
                     }
                 }
-                if (!overLeft){
-                    if (flag == 0)
-                        match.getTeam2().playersList[bowlerIndex].wasLastBowling = false;
-                    else
-                        match.getTeam1().playersList[bowlerIndex].wasLastBowling = false;
-                }
-                if (!runScored){
-                    if (flag == 0)
-                        match.getTeam2().playersList[bowlerIndex].numberOfMaidenOvers++;
-                    else
-                        match.getTeam1().playersList[bowlerIndex].numberOfMaidenOvers++;
-                }
+            }
+            if (runsInThisOver == 0) {
+                if (flag == 0)
+                    match.getTeam2().playersList[bowlerIndex].numberOfMaidenOvers++;
+                else
+                    match.getTeam1().playersList[bowlerIndex].numberOfMaidenOvers++;
             }
             if (wickets == 10)
                 break;
